@@ -55,7 +55,6 @@ public class PlexerSQLGetTableName extends PlexerSQL {
 
     @Override
     protected void token_cb(byte[] text, int start, int end) {
-        String debug = new String(Arrays.copyOfRange(text, start, end));
         if(check_all_table_name_hint(text, start, end)){
             set_back(true);
         }else if(back()){

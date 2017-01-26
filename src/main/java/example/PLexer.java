@@ -76,7 +76,7 @@ public class PLexer {
 
     public void lexer(iter it){
         while(true){
-            if(it.get() == '\0'){ return; }else{ it.pos--; }
+            if(it.get() == '\0'){ break; }else{ it.pos--; }
             if(try_read_blacks(it)){ continue; }
             if(try_read_sep(it)){ continue; }
             if(try_read_comment(it)){ continue; }
@@ -85,5 +85,6 @@ public class PLexer {
             if(try_read_bracket_r(it)){ continue; }
             read_token_iter(it);
         }
+        flush_token(it);
     }
 }

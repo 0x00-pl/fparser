@@ -682,12 +682,13 @@ public class SQLParser {
         //  tip:sql越长时间越长
         //  tip:递归好像消耗有点大
 
-        byte[] src = "SELECT a FROM ab             , ee.ff AS f,(SELECT a FROM `schema_bb`.`tbl_bb`,(SELECT a FROM ccc AS c, `dddd`));".getBytes(StandardCharsets.UTF_8);//20794
+        //byte[] src = "SELECT a FROM ab             , ee.ff AS f,(SELECT a FROM `schema_bb`.`tbl_bb`,(SELECT a FROM ccc AS c, `dddd`));".getBytes(StandardCharsets.UTF_8);//20794
+        byte[] src = "select a,b,c,d,e,f,g from h".getBytes(StandardCharsets.UTF_8);//20794
         int count = 0;
         long start = System.currentTimeMillis();
-        PlexerSQLTree l = new PlexerSQLTree();
+        //PlexerSQLTree l = new PlexerSQLTree();
         do {
-            l.lexer(new PLexer.iter(src));  //parser.parse(src, context);
+            parser.parse(src, context);
         } while (count++ < 10_000_000);
         return System.currentTimeMillis() - start;
     }
@@ -703,7 +704,7 @@ public class SQLParser {
             if (cur < min || min == 0) {
                 min = cur;
             }
+            System.out.println("min time O: " + cur);
         }
-        System.out.print("min time : " + min);
     }
 }

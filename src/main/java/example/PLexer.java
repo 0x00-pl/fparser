@@ -23,6 +23,14 @@ public class PLexer {
                 return '\0';
             }
         }
+        public int get2(){
+            if(pos < text.length){
+                return ch = text[pos++];
+            }else{
+                pos = text.length;
+                return '\0';
+            }
+        }
         public boolean startsWith(final byte[] text){
             try {
                 for (int i = 0; i < text.length; i++) {
@@ -76,14 +84,16 @@ public class PLexer {
 
     public void lexer(iter it){
         while(true){
-            if(it.get() == '\0'){ break; }else{ it.pos--; }
-            if(try_read_blacks(it)){ continue; }
-            if(try_read_sep(it)){ continue; }
-            if(try_read_comment(it)){ continue; }
-            if(try_read_string(it)){ continue; }
-            if(try_read_bracket_l(it)){ continue; }
-            if(try_read_bracket_r(it)){ continue; }
-            read_token_iter(it);
+            //if(it.get() == '\0'){ break; }else{ it.pos--; }
+            if(it.pos >= it.text.length){ break; }
+            if(try_read_comment(it) ||
+                    try_read_string(it) ||
+                    try_read_sep(it) ||
+                    try_read_blacks(it) ||
+                    try_read_bracket_l(it) ||
+                    try_read_bracket_r(it)
+            ){ continue; }
+                    read_token_iter(it);
         }
         flush_token(it);
     }

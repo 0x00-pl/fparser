@@ -1,5 +1,6 @@
 package example;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -43,14 +44,20 @@ public class PlexerSQLGetTableName extends PlexerSQL {
         return end-start == keyword.length && equal_substr(text, start, keyword, 0, keyword.length);
     }
     private boolean check_all_table_name_hint(final byte[] text, int start, int end){
-        return check_table_name_hint(text, start, end, "from".getBytes()) ||
-                check_table_name_hint(text, start, end, "join".getBytes()) ||
-                (check_table_name_hint(text, start, end, ",".getBytes()) && back());
+        final byte[] _from = "from".getBytes();
+        final byte[] _join = "join".getBytes();
+        final byte[] _comma = ",".getBytes();
+        return check_table_name_hint(text, start, end, _from) ||
+                check_table_name_hint(text, start, end, _join) ||
+                (check_table_name_hint(text, start, end, _comma) && back());
     }
     private boolean check_all_non_table_name_hint(final byte[] text, int start, int end){
-        return check_table_name_hint(text, start, end, "where".getBytes()) ||
-                check_table_name_hint(text, start, end, "order".getBytes()) ||
-                check_table_name_hint(text, start, end, "limit".getBytes());
+        final byte[] _where = "where".getBytes();
+        final byte[] _order = "order".getBytes();
+        final byte[] _limit = "limit".getBytes();
+        return check_table_name_hint(text, start, end, _where) ||
+                check_table_name_hint(text, start, end, _order) ||
+                check_table_name_hint(text, start, end, _limit);
     }
 
     @Override
@@ -58,7 +65,7 @@ public class PlexerSQLGetTableName extends PlexerSQL {
         if(check_all_table_name_hint(text, start, end)){
             set_back(true);
         }else if(back()){
-            this.names.add(new String(Arrays.copyOfRange(text, start, end)));
+            //this.names.add(new Strselect a,b,c,d,e,f,g from hing(Arrays.copyOfRange(text, start, end)));
             set_back(false);
         }else if(check_all_non_table_name_hint(text, start, end)){
             set_back(false);
@@ -74,9 +81,38 @@ public class PlexerSQLGetTableName extends PlexerSQL {
         pop();
     }
 
-    public static void main(String[] argv){
+    public static void main1(String[] argv){
         PlexerSQLGetTableName gn = new PlexerSQLGetTableName();
         gn.lexer(new iter("select a from(select a,b from c),d join e".getBytes()));
         System.out.println(gn.names.toString());
+    }
+
+    static long RunBench() {
+        //  todo:动态解析代码生成器
+        //  todo:函数调用
+        //  tip:sql越长时间越长
+        //  tip:递归好像消耗有点大
+
+        //byte[] src = "SELECT a FROM ab             , ee.ff AS f,(SELECT a FROM `schema_bb`.`tbl_bb`,(SELECT a FROM ccc AS c, `dddd`));".getBytes(StandardCharsets.UTF_8);//20794
+        byte[] src = "select a,b,c,d,e,f,g from h".getBytes(StandardCharsets.UTF_8);//20794
+        int count = 0;
+        long start = System.currentTimeMillis();
+        do {
+            PlexerSQLGetTableName l = new PlexerSQLGetTableName();
+            l.lexer(new PLexer.iter(src));  //parser.parse(src, context);
+        } while (count++ < 10_000_0);
+        return System.currentTimeMillis() - start;
+    }
+    public static void main(String[] args) {
+        long min = 0;
+        for (int i = 0; i < 10; i++) {
+            //System.out.print("Loop "+i+" : ");
+            long cur = RunBench();//无参数优化：7510，加server参数7657，因为是默认就是server jvm，优化流程后6531
+            //System.out.println(cur);
+            if (cur < min || min == 0) {
+                min = cur;
+            }
+            System.out.println("min time P: " + cur);
+        }
     }
 }

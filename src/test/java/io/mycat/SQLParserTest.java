@@ -1,11 +1,10 @@
 package io.mycat;
 
 import junit.framework.TestCase;
-import mycat.SQLContext;
-import mycat.SQLParser;
+
 import org.junit.Before;
 import org.junit.Test;
-
+import io.mycat.SQLContext;
 import java.util.stream.IntStream;
 
 /**
@@ -13,13 +12,13 @@ import java.util.stream.IntStream;
  */
 public class SQLParserTest extends TestCase {
 
-    SQLParser parser;
-    SQLContext context;
+    io.mycat.SQLParser parser;
+    io.mycat.SQLContext context;
 
     @Before
     protected void setUp() throws Exception {
-        parser = new SQLParser();
-        context = new SQLContext();
+        parser = new io.mycat.SQLParser();
+        context = new io.mycat.SQLContext();
     }
 
     @Test
@@ -80,7 +79,7 @@ public class SQLParserTest extends TestCase {
     public void testNormalDelete() throws Exception {
         String sql = "DELETE FROM tbl_A WHERE name='nobody';";
         parser.parse(sql.getBytes(), context);
-        assertEquals(SQLContext.DELETE_SQL, context.getSQLType());
+        assertEquals(io.mycat.SQLContext.DELETE_SQL, context.getSQLType());
         assertEquals("tbl_A", context.getTableName(0));
     }
 
@@ -88,7 +87,7 @@ public class SQLParserTest extends TestCase {
     public void testNormalInsert() throws Exception {
         String sql = "INSERT INTO tbl_A (`name`) VALUES ('kaiz');";
         parser.parse(sql.getBytes(), context);
-        assertEquals(SQLContext.INSERT_SQL, context.getSQLType());
+        assertEquals(io.mycat.SQLContext.INSERT_SQL, context.getSQLType());
         assertEquals("tbl_A", context.getTableName(0));
     }
 
@@ -96,7 +95,7 @@ public class SQLParserTest extends TestCase {
     public void testNormalInsert2() throws Exception {
         String sql = "INSERT `schema`.`tbl_A` (`name`) VALUES ('kaiz');";
         parser.parse(sql.getBytes(), context);
-        assertEquals(SQLContext.INSERT_SQL, context.getSQLType());
+        assertEquals(io.mycat.SQLContext.INSERT_SQL, context.getSQLType());
         assertEquals("tbl_A", context.getTableName(0));
     }
 

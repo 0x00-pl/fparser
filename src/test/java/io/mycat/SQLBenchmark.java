@@ -4,6 +4,7 @@ package io.mycat;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
+import example.SQLFast;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.Throughput)//基准测试类型
 @OutputTimeUnit(TimeUnit.SECONDS)//基准测试结果的时间类型
-@Warmup(iterations = 10)//预热的迭代次数
+@Warmup(iterations = 5)//预热的迭代次数
 @Threads(1)//测试线程数量
 @State(Scope.Thread)//该状态为每个线程独享
 //度量:iterations进行测试的轮次，time每轮进行的时长，timeUnit时长单位,batchSize批次数量
@@ -26,7 +27,7 @@ public class SQLBenchmark {
     io.mycat.SQLContext context;
     byte[] srcBytes;
     String src;
-
+    SQLFast.collector c;
     //run
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -43,6 +44,7 @@ public class SQLBenchmark {
         srcBytes = src.getBytes(StandardCharsets.UTF_8);//20794
         parser = new io.mycat.SQLParser();
         context = new io.mycat.SQLContext();
+       c = new SQLFast.collector();
         System.out.println("=> init");
     }
 
@@ -55,7 +57,10 @@ public class SQLBenchmark {
     public void DruidTest() {
         List<SQLStatement> stmtList = SQLUtils.parseStatements(src, "mysql");
     }
-
+    @Benchmark
+    public void SQLFastTest() {
+        SQLFast.lexer(srcBytes, 0, c);
+    }
     public void DruidParse() {
         List<SQLStatement> stmtList = SQLUtils.parseStatements(src, "mysql");
         //解析出的独立语句的个数

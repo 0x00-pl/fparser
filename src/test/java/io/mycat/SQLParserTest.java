@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
  * Created by Kaiz on 2017/1/22.
  */
 public class SQLParserTest extends TestCase {
+
     SQLParser parser;
     SQLContext context;
 

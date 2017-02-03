@@ -24,19 +24,28 @@ public class FC {
         pos = 0;
         while(pos+4 < text.length){
             switch(text[pos+3]){
-                case 't':
+                case 'f':
+                    pos += 3;
+                    break;
+                case 'r':
+                    pos += 2;
+                    break;
+                case 'o':
+                    pos += 1;
+                    break;
+                case 'm':
                     pos += 4;
                     if(text[pos]=='l' && text[pos+1]=='e' && text[pos+2]=='c'){
                         pos += c.select(text, pos);
                     }
                     break;
-                case 'c':
+                case 'i':
                     pos += 3;
                     break;
-                case 'e':
-                    pos += 2;
-                    break;
-                case 'l':
+//                case 'o':
+//                    pos += 2;
+//                    break;
+                case 'j':
                     pos += 1;
                     break;
                 case 'n':
@@ -45,18 +54,6 @@ public class FC {
                         pos += c.join(text, pos);
                     }
                     break;
-                case 'i':
-                    pos += 3;
-                    break;
-                case 'o':
-                    pos += 2;
-                    break;
-                case 'j':
-                    pos += 1;
-                    break;
-
-                case 'a':case'b':case 'd':case'f':
-                case 'g':case'h':case 'k':case'm':
                 default:
                     pos += 4;
             }

@@ -15,7 +15,7 @@ public class SQLFast {
         }
     }
 
-    private static final int _lect = 'l'<<24 | 'e'<<16 | 'c'<<8 | 't';
+    private static final int _from = 'f'<<24 | 'r'<<16 | 'o'<<8 | 'm';
     private static final int _join = 'j'<<24 | 'o'<<16 | 'i'<<8 | 'n';
 
     public static void lexer(final byte[] text, int pos, collector c){
@@ -24,7 +24,7 @@ public class SQLFast {
         while(pos < len){
             cache = cache<<8 | text[pos]; // TODO: this line
             switch(cache) {
-                case _lect:
+                case _from:
                     pos += c.select(text, pos);
                     continue;
                 case _join:

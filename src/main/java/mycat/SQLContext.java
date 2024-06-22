@@ -1,5 +1,6 @@
-package mycat;
+package io.mycat;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
